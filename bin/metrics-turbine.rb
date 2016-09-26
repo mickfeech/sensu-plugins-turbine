@@ -62,7 +62,7 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
               if json_data.end_with?('}')
                 message = JSON.parse(json_data)
                 if message['name'] == @thread_pool
-                  info.size.times { |i| puts "#{config[:scheme]}.#{message['name']}.#{info[i]}.#{message[info[i]]}" unless message[info[i]].nil? }
+                  info.size.times { |i| output "#{config[:scheme]}.#{message['name']}.#{info[i]}.#{message[info[i]]}" unless message[info[i]].nil? }
                   EventMachine.stop
                 end
               end
