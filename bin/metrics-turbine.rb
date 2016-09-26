@@ -51,7 +51,7 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
   def run
     config[:scheme] = URI(@url).host
     http = EM::HttpRequest.new(@url, keepalive: true, connect_timeout: 0, inactivity_timeout: 0)
-    info = %w(currentActiveCount currentConcurrentExecutionCount)
+    info = %w(rollingCountSuccess currentActiveCount currentConcurrentExecutionCount rollingMaxConcurrentExecutionCount rollingCountBadRequests)
     EventMachine.run do
       req = http.get(head: { 'accept' => 'application/json' })
       req.stream do |chunk|
