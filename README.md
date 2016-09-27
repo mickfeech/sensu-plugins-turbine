@@ -4,7 +4,11 @@
 [![Gem Version](https://badge.fury.io/rb/sensu-plugins-turbine.svg)](https://badge.fury.io/rb/sensu-plugins-turbine)
 
 ## Functionality
-Sensu plugin to obtain turbine.stream metrics.
+Sensu plugin to obtain metrics from [Netflix's Turbine service](https://github.com/Netflix/turbine)
+which aggregates data from their [Hystrix project](https://github.com/Netflix/Hystrix).  
+The data comes in from turbine as a stream, the script parses the data stream
+looking for the first occurrence of the thread pool in question returns the
+data, and then disconnects from the stream for the next check.
 
 ## Files
 - bin/metrics-turbine.rb
