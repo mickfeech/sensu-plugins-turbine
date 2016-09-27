@@ -42,14 +42,19 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
          description: 'The pool name requested',
          required: true
 
+  option :scheme,
+         short: '-s SCHEME',
+         description: 'Graphite storage scheme'
+
   def initialize
     super
     @url = config[:url]
     @thread_pool = config[:thread_pool]
+    @scheme = config[:scheme]
   end
 
   def run
-    config[:scheme] = URI(@url).host
+    config[:scheme] = @scheme
     http = EM::HttpRequest.new(@url, keepalive: true, connect_timeout: 0, inactivity_timeout: 0)
     info = %w(rollingCountSuccess currentActiveCount currentConcurrentExecutionCount rollingMaxConcurrentExecutionCount rollingCountBadRequests)
     EventMachine.run do
