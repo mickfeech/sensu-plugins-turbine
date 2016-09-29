@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.executables   = Dir.glob('bin/**/*.rb').map { |file| File.basename(file) }
   s.homepage      = 'https://github.com/mickfeech/sensu-plugins-turbine'
   s.summary       = 'This provides functionality to check turbine streams.'
-  s.description   = 'Plugins to provide functionality to check systemd services for Sensu, a monitoring framework'
+  s.description   = 'Plugins to provide functionality to check metrics from the turbine stream for Sensu, a monitoring framework'
   s.license       = 'MIT'
   s.has_rdoc      = false
   s.require_paths = ['lib']
