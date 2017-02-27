@@ -27,8 +27,7 @@
 #   for details.
 
 require 'sensu-plugin/metric/cli'
-require 'eventmachine'
-require 'em-http'
+require 'em-eventsource'
 require 'json'
 
 class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
@@ -55,26 +54,16 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
 
   def run
     config[:scheme] = @scheme
-    http = EM::HttpRequest.new(@url, keepalive: true, connect_timeout: 0, inactivity_timeout: 0)
     info = %w(rollingCountSuccess currentActiveCount currentConcurrentExecutionCount rollingMaxConcurrentExecutionCount rollingCountBadRequests)
-    EventMachine.run do
-      req = http.get(head: { 'accept' => 'application/json' })
-      req.stream do |chunk|
-        unless chunk.strip.empty?
-          if chunk.include?('data: ') && !chunk.include?('ping')
-            json_data = (chunk.split(': ')[1]).strip!
-            unless json_data.nil?
-              if json_data.end_with?('}')
-                message = JSON.parse(json_data)
-                if message['name'] == @thread_pool
-                  info.size.times { |i| output "#{@scheme}.#{message['name']}.#{info[i]}", message[info[i]] unless message[info[i]].nil? }
-                  EventMachine.stop
-                end
-              end
-            end
-          end
+    EM.run do
+      source = EventMachine::EventSource.new(@url)
+      source.message do |message|
+        json_data = JSON.parse(message)
+        if json_data['name'] == @thread_pool
+          info.size.times { |i| output "#{@scheme}.#{json_data['name']}.#{info[i]}", json_data[info[i]]}
         end
       end
+      source.start
     end
     ok
   end
