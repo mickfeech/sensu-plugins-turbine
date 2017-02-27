@@ -57,15 +57,15 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
     info = %w(rollingCountSuccess currentActiveCount currentConcurrentExecutionCount rollingMaxConcurrentExecutionCount rollingCountBadRequests)
     EM.run do
       source = EventMachine::EventSource.new(@url)
+      source start
       source.message do |message|
         json_data = JSON.parse(message)
         if json_data['name'] == @thread_pool
           info.size.times { |i| output "#{@scheme}.#{json_data['name']}.#{info[i]}", json_data[info[i]] }
           source.close
+          ok
         end
       end
-      source.start
     end
-    ok
   end
 end
