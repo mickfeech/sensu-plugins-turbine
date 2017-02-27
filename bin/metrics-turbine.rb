@@ -61,6 +61,7 @@ class PodsMetrics < Sensu::Plugin::Metric::CLI::Graphite
         json_data = JSON.parse(message)
         if json_data['name'] == @thread_pool
           info.size.times { |i| output "#{@scheme}.#{json_data['name']}.#{info[i]}", json_data[info[i]] }
+          source.close
         end
       end
       source.start
