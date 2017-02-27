@@ -1,3 +1,6 @@
+Allcops:
+  Excludes:
+    - sensu-plugins-turbine.gemspec
 MethodLength:
   Max: 200
 
