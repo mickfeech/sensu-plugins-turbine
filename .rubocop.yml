@@ -1,4 +1,4 @@
-Allcops:
+AllCops:
   Excludes:
     - sensu-plugins-turbine.gemspec
 MethodLength:
